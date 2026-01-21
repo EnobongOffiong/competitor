@@ -16,12 +16,10 @@
         
         <!-- Quick filters for common columns -->
         <div class="filter-row">
-              <div class="filter-group">
-            <h4>Model: <span id="selectedModel">Select model type(s)</span></h4>
-            <div class="filter-options" id="modelFilters">
-                <!-- Will be populated by JavaScript -->
-            </div>
-        </div>
+            <label>Tool Type:</label>
+            <select id="filterToolType" onchange="applyFilter()">
+                <option value="">All</option>
+            </select>
             
             <label>Category:</label>
             <select id="filterCategory" onchange="applyFilter()">
@@ -280,3 +278,4 @@
 </html>
 
 
+Power Analysis Tools Spring25_clean - Table.csv"
