@@ -1,70 +1,77 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>POWER ANALYSIS TOOLS</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <link rel = "stylesheet" href= "style.css"></link>
-    <style>
-        
-    </style>
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+    <style></style>
+  </head>
+  <body>
     <h1 style="font-size: 18px">Power Analysis Tools Database</h1>
-    
+    <div class="search-container">
+      <h3>Filter Tools</h3>
+      <div class="search-select-container">
+        <div style="display: flex"><p>Model</p> </div>
+        <div style="display: flex"><p>Other</p></div>
+        <div style="display: flex"><p>Type</p><select id="filterToolType" onchange="applyFilter()">
+            <option value="">All</option>
+          </select></div>
+        <div style="display: flex"><p>Price</p></div>
+      </div>
+    </div>
     <div class="filter-section">
-        <h3>Filter Tools</h3>
-        
-        <!-- Quick filters for common columns -->
-        <div class="filter-row">
-            <label>Tool Type:</label>
-            <select id="filterToolType" onchange="applyFilter()">
-                <option value="">All</option>
-            </select>
-            
-            <label>Category:</label>
-            <select id="filterCategory" onchange="applyFilter()">
-                <option value="">All</option>
-            </select>
-            
-            <label>Working:</label>
-            <select id="filterWorking" onchange="applyFilter()">
-                <option value="">All</option>
-                <option value="YES">Yes</option>
-                <option value="NO">No</option>
-            </select>
-        </div>
-        
-        <div class="filter-row">
-            <label>Analysis Type:</label>
-            <select id="filterAnalysis" onchange="applyFilter()">
-                <option value="">All</option>
-                <option value="T.test">T.test</option>
-                <option value="ANOVA">ANOVA</option>
-                <option value="Single level regression">Regression</option>
-                <option value="MLM">MLM</option>
-                <option value="SEM">SEM</option>
-                <option value="Bayesian">Bayesian</option>
-            </select>
-            
-            <label>Price:</label>
-            <select id="filterPrice" onchange="applyFilter()">
-                <option value="">All</option>
-                <option value="Free">Free</option>
-                <option value="Up to $250">Up to $250</option>
-                <option value="More than $500">More than $500</option>
-                
-            </select>
-            
-            <label>GUI:</label>
-            <select id="filterGUI" onchange="applyFilter()">
-                <option value="">All</option>
-                <option value="YES">Yes</option>
-                <option value="NO">No</option>
-            </select>
-        </div>
-        
-        <!-- Custom column filter -->
-        <!-- <div class="filter-row">
+      <h3>Filter Tools</h3>
+
+      <!-- Quick filters for common columns -->
+      <div class="filter-row">
+        <label>Tool Type:</label>
+        <select id="filterToolType" onchange="applyFilter()">
+          <option value="">All</option>
+        </select>
+
+        <label>Category:</label>
+        <select id="filterCategory" onchange="applyFilter()">
+          <option value="">All</option>
+        </select>
+
+        <label>Working:</label>
+        <select id="filterWorking" onchange="applyFilter()">
+          <option value="">All</option>
+          <option value="YES">Yes</option>
+          <option value="NO">No</option>
+        </select>
+      </div>
+
+      <div class="filter-row">
+        <label>Analysis Type:</label>
+        <select id="filterAnalysis" onchange="applyFilter()">
+          <option value="">All</option>
+          <option value="T.test">T.test</option>
+          <option value="ANOVA">ANOVA</option>
+          <option value="Single level regression">Regression</option>
+          <option value="MLM">MLM</option>
+          <option value="SEM">SEM</option>
+          <option value="Bayesian">Bayesian</option>
+        </select>
+
+        <label>Price:</label>
+        <select id="filterPrice" onchange="applyFilter()">
+          <option value="">All</option>
+          <option value="Free">Free</option>
+          <option value="Up to $250">Up to $250</option>
+          <option value="More than $500">More than $500</option>
+        </select>
+
+        <label>GUI:</label>
+        <select id="filterGUI" onchange="applyFilter()">
+          <option value="">All</option>
+          <option value="YES">Yes</option>
+          <option value="NO">No</option>
+        </select>
+      </div>
+
+      <!-- Custom column filter -->
+      <!-- <div class="filter-row">
             <label>Custom Filter:</label>
             <select id="customColumn">
                 <option value="">Select Column</option>
@@ -73,209 +80,231 @@
             <button onclick="addCustomFilter()">Add Filter</button>
             <button onclick="clearFilters()">Clear All</button>
         </div> -->
-        
-        <p>Showing <span id="count" class="count">0</span> of <span id="total" class="count">0</span> tools</p>
+
+      <p>
+        Showing <span id="count" class="count">0</span> of
+        <span id="total" class="count">0</span> tools
+      </p>
     </div>
-    
+
     <div id="tableContainer"></div>
 
     <script>
-        
-        const csvFilePath = "Power Analysis Tools Spring25_clean - Table.csv";  
-        let allData = [];
-        let filteredData = [];
-        let activeFilters = {};
-        
-        // Load the CSV when page loads
-        d3.csv(csvFilePath).then(data => {
-            allData = data;  //array of objects
-            filteredData = [...allData];
-            
-            console.log("Data loaded:", allData);
-            populateFilterOptions();
-            displayData();
-        }).catch(error => {
-            console.error("Error loading CSV:", error);
-            document.getElementById("tableContainer").innerHTML = 
-                `<p style="color:red">Error loading CSV: ${error.message}</p>`;
+      const csvFilePath = "Power Analysis Tools Spring25_clean - Table.csv";
+      let allData = [];
+      let filteredData = [];
+      let activeFilters = {};
+
+      // Load the CSV when page loads
+      d3.csv(csvFilePath)
+        .then((data) => {
+          allData = data; //array of objects
+          filteredData = [...allData];
+
+          console.log("Data loaded:", allData);
+          populateFilterOptions();
+          displayData();
+        })
+        .catch((error) => {
+          console.error("Error loading CSV:", error);
+          document.getElementById(
+            "tableContainer"
+          ).innerHTML = `<p style="color:red">Error loading CSV: ${error.message}</p>`;
         });
-        
-        function populateFilterOptions() {
-            // Get unique values for Tool_type
-            const toolTypes = [...new Set(allData.map(row => row.Tool_type))]
-            const toolTypeSelect = document.getElementById("filterToolType");
-            toolTypes.forEach(type => {
-                const option = document.createElement("option");
-                option.value = type;
-                option.textContent = type;
-                toolTypeSelect.appendChild(option);
-            });
-            
-            // Get unique values for Category
-            const categories = [...new Set(allData.map(row => row.Category))];
-            const categorySelect = document.getElementById("filterCategory");
-            categories.forEach(cat => {
-                const option = document.createElement("option");
-                option.value = cat;
-                option.textContent = cat;
-                categorySelect.appendChild(option);
-            });
-            
-            // Populate custom column dropdown
-            // const customColumnSelect = document.getElementById("customColumn");
-            // const columns = Object.keys(allData[0]);
-            // columns.forEach(col => {
-            //     const option = document.createElement("option");
-            //     option.value = col;
-            //     option.textContent = col;
-            //     customColumnSelect.appendChild(option);
-            // });
-        }
-        
-        function applyFilter() {
-            activeFilters = {};
-            
-            // Get values from dropdowns
-            const toolType = document.getElementById("filterToolType").value;
-            const category = document.getElementById("filterCategory").value;
-            const working = document.getElementById("filterWorking").value;
-            const analysis = document.getElementById("filterAnalysis").value;
-            const price = document.getElementById("filterPrice").value;
-            const gui = document.getElementById("filterGUI").value;
-            
-            // Add to filters if selected
-            if (toolType) activeFilters.Tool_type = toolType;
-            if (category) activeFilters.Category = category;
-            if (working) activeFilters.Working = working;
-            if (analysis) activeFilters[analysis] = "YES";  // Filter by analysis type
-            if (price) activeFilters.Price = price;
-            if (gui) activeFilters.GUI = gui;
-            
-            filterData();
-        }
-        
-        // function addCustomFilter() {
-        //     const column = document.getElementById("customColumn").value;
-        //     const value = document.getElementById("customValue").value;
-            
-        //     if (!column || !value) {
-        //         alert("Please select a column and enter a value");
-        //         return;
-        //     }
-            
-        //     activeFilters[column] = value;
-        //     filterData();
-        // }
-        
-        function filterData() {
-            filteredData = allData.filter(row => {
-                // Check all active filters
-                for (const [column, value] of Object.entries(activeFilters)) {
-                    // For analysis columns (T.test, ANOVA, etc.), check if value is "Yes"
-                    if (["T.test", "ANOVA", "Single level regression", "MLM", "SEM", 
-                         "Proportion", "Correlation", "Survival analysis", "Other", 
-                         "CI Estimation", "Bayesian"].includes(column)) {
-                        if (row[column] !== "YES") return false;
-                    } else {
-                        // For other columns, check exact match
-                        if (row[column] !== value) return false;
-                    }
-                }
-                return true;
-            });
-            
-            displayData();
-        }
-        
-        function displayData() {
-            const container = document.getElementById("tableContainer");
-            
-            if (filteredData.length === 0) {
-                container.innerHTML = "<p>No data matches your filters</p>";
-                updateCounts();
-                return;
+
+      function populateFilterOptions() {
+        // Get unique values for Tool_type
+        const toolTypes = [...new Set(allData.map((row) => row.Tool_type))];
+        const toolTypeSelect = document.getElementById("filterToolType");
+        toolTypes.forEach((type) => {
+          const option = document.createElement("option");
+          option.value = type;
+          option.textContent = type;
+          toolTypeSelect.appendChild(option);
+        });
+
+        // Get unique values for Category
+        const categories = [...new Set(allData.map((row) => row.Category))];
+        const categorySelect = document.getElementById("filterCategory");
+        categories.forEach((cat) => {
+          const option = document.createElement("option");
+          option.value = cat;
+          option.textContent = cat;
+          categorySelect.appendChild(option);
+        });
+
+        // Populate custom column dropdown
+        // const customColumnSelect = document.getElementById("customColumn");
+        // const columns = Object.keys(allData[0]);
+        // columns.forEach(col => {
+        //     const option = document.createElement("option");
+        //     option.value = col;
+        //     option.textContent = col;
+        //     customColumnSelect.appendChild(option);
+        // });
+      }
+
+      function applyFilter() {
+        activeFilters = {};
+
+        // Get values from dropdowns
+        const toolType = document.getElementById("filterToolType").value;
+        const category = document.getElementById("filterCategory").value;
+        const working = document.getElementById("filterWorking").value;
+        const analysis = document.getElementById("filterAnalysis").value;
+        const price = document.getElementById("filterPrice").value;
+        const gui = document.getElementById("filterGUI").value;
+
+        // Add to filters if selected
+        if (toolType) activeFilters.Tool_type = toolType;
+        if (category) activeFilters.Category = category;
+        if (working) activeFilters.Working = working;
+        if (analysis) activeFilters[analysis] = "YES"; // Filter by analysis type
+        if (price) activeFilters.Price = price;
+        if (gui) activeFilters.GUI = gui;
+
+        filterData();
+      }
+
+      // function addCustomFilter() {
+      //     const column = document.getElementById("customColumn").value;
+      //     const value = document.getElementById("customValue").value;
+
+      //     if (!column || !value) {
+      //         alert("Please select a column and enter a value");
+      //         return;
+      //     }
+
+      //     activeFilters[column] = value;
+      //     filterData();
+      // }
+
+      function filterData() {
+        filteredData = allData.filter((row) => {
+          // Check all active filters
+          for (const [column, value] of Object.entries(activeFilters)) {
+            // For analysis columns (T.test, ANOVA, etc.), check if value is "Yes"
+            if (
+              [
+                "T.test",
+                "ANOVA",
+                "Single level regression",
+                "MLM",
+                "SEM",
+                "Proportion",
+                "Correlation",
+                "Survival analysis",
+                "Other",
+                "CI Estimation",
+                "Bayesian",
+              ].includes(column)
+            ) {
+              if (row[column] !== "YES") return false;
+            } else {
+              // For other columns, check exact match
+              if (row[column] !== value) return false;
             }
-            
-            const columns = Object.keys(filteredData[0]);
-            
-            let html = `<table>
+          }
+          return true;
+        });
+
+        displayData();
+      }
+
+      function displayData() {
+        const container = document.getElementById("tableContainer");
+
+        if (filteredData.length === 0) {
+          container.innerHTML = "<p>No data matches your filters</p>";
+          updateCounts();
+          return;
+        }
+
+        const columns = Object.keys(filteredData[0]);
+
+        let html = `<table>
                 <thead>
-                    <tr>${columns.map(col => `<th>${col}</th>`).join('')}</tr>
+                    <tr>${columns.map((col) => `<th>${col}</th>`).join("")}</tr>
                 </thead>
                 <tbody>`;
-            
-            filteredData.forEach(row => {
-                html += "<tr>";
-                columns.forEach(col => {
-                    const value = row[col];
-                    let displayValue = value;
-                    
-                    // Highlight "Yes" values for analysis columns
-                    if (["Yes", "yes", "Y", "y"].includes(value)) {
-                        displayValue = `<span style="color:green;font-weight:bold">${value}</span>`;
-                    } else if (["No", "no", "N", "n"].includes(value)) {
-                        displayValue = `<span style="color:gray">${value}</span>`;
-                    }
-                    
-                    html += `<td>${displayValue || ''}</td>`;
-                });
-                html += "</tr>";
-            });
-            
-            html += "</tbody></table>";
-            container.innerHTML = html;
-            updateCounts();
-        }
-        
-        function updateCounts() {
-            document.getElementById("count").textContent = filteredData.length;
-            document.getElementById("total").textContent = allData.length;
-        }
-        
-        // function clearFilters() {
-        //     // Reset all dropdowns
-        //     document.getElementById("filterToolType").value = "";
-        //     document.getElementById("filterCategory").value = "";
-        //     document.getElementById("filterWorking").value = "";
-        //     document.getElementById("filterAnalysis").value = "";
-        //     document.getElementById("filterPrice").value = "";
-        //     document.getElementById("filterGUI").value = "";
-        //     document.getElementById("customColumn").value = "";
-        //     document.getElementById("customValue").value = "";
-            
-        //     activeFilters = {};
-        //     filteredData = [...allData];
-        //     displayData();
-        // }
-        
-        // Helper functions you can use in console
-        function findToolsWithFeature(feature) {
-            // Find all tools that have a specific feature set to "Yes"
-            return allData.filter(row => row[feature] === "Yes");
-        }
-        
-        function getToolsByType(type) {
-            return allData.filter(row => row.Tool_type === type);
-        }
-        
-        function compareAnalysisFeatures() {
-            // Compare which tools support which analyses
-            const comparison = allData.map(tool => {
-                const features = {};
-                ["T.test", "ANOVA", "Single level regression", "MLM", "SEM", 
-                 "Bayesian"].forEach(feature => {
-                    features[feature] = tool[feature] === "Yes";
-                });
-                return {
-                    Tool_name: tool.Tool_name,
-                    ...features
-                };
-            });
-            return comparison;
-        }
-    </script>
-</body>
-</html>
 
+        filteredData.forEach((row) => {
+          html += "<tr>";
+          columns.forEach((col) => {
+            const value = row[col];
+            let displayValue = value;
+
+            // Highlight "Yes" values for analysis columns
+            if (["Yes", "yes", "Y", "y"].includes(value)) {
+              displayValue = `<span style="color:green;font-weight:bold">${value}</span>`;
+            } else if (["No", "no", "N", "n"].includes(value)) {
+              displayValue = `<span style="color:gray">${value}</span>`;
+            }
+
+            html += `<td>${displayValue || ""}</td>`;
+          });
+          html += "</tr>";
+        });
+
+        html += "</tbody></table>";
+        container.innerHTML = html;
+        updateCounts();
+      }
+
+      function updateCounts() {
+        document.getElementById("count").textContent = filteredData.length;
+        document.getElementById("total").textContent = allData.length;
+      }
+
+      // function clearFilters() {
+      //     // Reset all dropdowns
+      //     document.getElementById("filterToolType").value = "";
+      //     document.getElementById("filterCategory").value = "";
+      //     document.getElementById("filterWorking").value = "";
+      //     document.getElementById("filterAnalysis").value = "";
+      //     document.getElementById("filterPrice").value = "";
+      //     document.getElementById("filterGUI").value = "";
+      //     document.getElementById("customColumn").value = "";
+      //     document.getElementById("customValue").value = "";
+
+      //     activeFilters = {};
+      //     filteredData = [...allData];
+      //     displayData();
+      // }
+
+      // Helper functions you can use in console
+      function findToolsWithFeature(feature) {
+        // Find all tools that have a specific feature set to "Yes"
+        return allData.filter((row) => row[feature] === "Yes");
+      }
+
+      function getToolsByType(type) {
+        return allData.filter((row) => row.Tool_type === type);
+      }
+
+      function compareAnalysisFeatures() {
+        // Compare which tools support which analyses
+        const comparison = allData.map((tool) => {
+          const features = {};
+          [
+            "T.test",
+            "ANOVA",
+            "Single level regression",
+            "MLM",
+            "SEM",
+            "Bayesian",
+          ].forEach((feature) => {
+            features[feature] = tool[feature] === "Yes";
+          });
+          return {
+            Tool_name: tool.Tool_name,
+            ...features,
+          };
+        });
+        return comparison;
+      }
+    </script>
+  </body>
+</html>
 
 Power Analysis Tools Spring25_clean - Table.csv"

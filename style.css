@@ -7,6 +7,7 @@ table {
 body{
    font-family: Arial, sans-serif;
    background-color: #f5f5f5;
+   margin:20px
 }
 
 th,
@@ -54,4 +55,15 @@ button {
 .count {
   font-weight: bold;
   color: #2c5282;
+}
+
+.search-container{
+    margin: 20px 0;
+    
+   
+}
+
+.search-select-container{
+    display: grid;
+    grid-template-columns: auto auto ;
 }
