@@ -4,19 +4,196 @@
     <title>POWER ANALYSIS TOOLS</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
     <style></style>
   </head>
   <body>
     <h1 style="font-size: 18px">Power Analysis Tools Database</h1>
+
+    <div style="display: flex; justify-content: space-between; width: 940px">
+      <h3 style="margin-bottom: 0; font-size: 16px">Filter Tools</h3>
+      <!-- <button>Clear</button> -->
+    </div>
+
     <div class="search-container">
-      <h3>Filter Tools</h3>
-      <div class="search-select-container">
-        <div style="display: flex"><p>Model</p> </div>
-        <div style="display: flex"><p>Other</p></div>
-        <div style="display: flex"><p>Type</p><select id="filterToolType" onchange="applyFilter()">
-            <option value="">All</option>
-          </select></div>
-        <div style="display: flex"><p>Price</p></div>
+      <div>
+        <div class="search-select-container">
+          <div class="search-select">
+            <p>Model</p>
+
+            <!-- <select class="search-dropdown" onclick="showCheckboxes()" onchange="applyFilter()">
+                <option value="">Select model type(s)</option>
+                </select>
+         -->
+            <div>
+              <div class="select-btn">
+                <span class="btn-text">Select model type(s)</span>
+                <span class="arrow-down">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </span>
+              </div>
+
+              <ul class="list-items">
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">T.test</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">ANOVA</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Regression (Single-Level)</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">SEM</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">MLM</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Bayesian</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Correlation</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Proportion</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="search-select">
+            <p>Other</p>
+            <select class="search-dropdown" onchange="applyFilter()">
+              <option value="">Select tool type(s)</option>
+            </select>
+          </div>
+
+          <div class="search-select">
+            <p>Type</p>
+            <!-- <select
+              class="search-dropdown"
+              id="filterToolType"
+              onchange="applyFilter()"
+            > -->
+
+            <div>
+              <div
+                class="select-btn"
+                onchange="applyFilter()"
+                id="filterToolType"
+              >
+                <span class="btn-text">Select tool type(s)</span>
+                <span class="arrow-down">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </span>
+              </div>
+
+              <ul class="list-items" id="tool-types">
+                <!-- <li class="item">
+                    <span class="checkbox">
+                      <i class="fa-solid fa-check check-icon"></i>
+                    </span>
+                    <span class="item-text">T.test</span>
+                  </li>
+                  <li class="item">
+                    <span class="checkbox">
+                      <i class="fa-solid fa-check check-icon"></i>
+                    </span>
+                    <span class="item-text">ANOVA</span>
+                  </li>
+                  <li class="item">
+                    <span class="checkbox">
+                      <i class="fa-solid fa-check check-icon"></i>
+                    </span>
+                    <span class="item-text">Regression (Single-Level)</span>
+                  </li>
+                  <li class="item">
+                    <span class="checkbox">
+                      <i class="fa-solid fa-check check-icon"></i>
+                    </span>
+                    <span class="item-text">SEM</span>
+                  </li>
+                  <li class="item">
+                    <span class="checkbox">
+                      <i class="fa-solid fa-check check-icon"></i>
+                    </span>
+                    <span class="item-text">MLM</span>
+                  </li>
+                  <li class="item">
+                    <span class="checkbox">
+                      <i class="fa-solid fa-check check-icon"></i>
+                    </span>
+                    <span class="item-text">Bayesian</span>
+                  </li>
+                  <li class="item">
+                    <span class="checkbox">
+                      <i class="fa-solid fa-check check-icon"></i>
+                    </span>
+                    <span class="item-text">Correlation</span>
+                  </li>
+                  <li class="item">
+                    <span class="checkbox">
+                      <i class="fa-solid fa-check check-icon"></i>
+                    </span>
+                    <span class="item-text">Proportion</span>
+                  </li> -->
+              </ul>
+            </div>
+            <!-- <option value="">Select tool type(s)</option>
+            </select> -->
+          </div>
+
+          <div class="search-select">
+            <label>Price</label>
+            <select
+              class="search-dropdown"
+              id="filterPrice"
+              onchange="applyFilter()"
+            >
+              <option value="">Select desired price</option>
+              <option value="Free">Free</option>
+              <option value="Up to $250">Up to $250</option>
+              <option value="More than $500">More than $500</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="search-btn-container">
+        <button style="margin-bottom: 20px">Clear</button>
+        <button class="search-btn">search</button>
+        <p>
+          Showing <span id="count" class="count">0</span> of
+          <span id="total" class="count">0</span> tools
+        </p>
       </div>
     </div>
     <div class="filter-section">
@@ -25,9 +202,9 @@
       <!-- Quick filters for common columns -->
       <div class="filter-row">
         <label>Tool Type:</label>
-        <select id="filterToolType" onchange="applyFilter()">
+        <!-- <select id="filterToolType" onchange="applyFilter()">
           <option value="">All</option>
-        </select>
+        </select> -->
 
         <label>Category:</label>
         <select id="filterCategory" onchange="applyFilter()">
@@ -70,17 +247,6 @@
         </select>
       </div>
 
-      <!-- Custom column filter -->
-      <!-- <div class="filter-row">
-            <label>Custom Filter:</label>
-            <select id="customColumn">
-                <option value="">Select Column</option>
-            </select>
-            <input type="text" id="customValue" placeholder="Enter value">
-            <button onclick="addCustomFilter()">Add Filter</button>
-            <button onclick="clearFilters()">Clear All</button>
-        </div> -->
-
       <p>
         Showing <span id="count" class="count">0</span> of
         <span id="total" class="count">0</span> tools
@@ -101,9 +267,11 @@
           allData = data; //array of objects
           filteredData = [...allData];
 
-          console.log("Data loaded:", allData);
           populateFilterOptions();
-          displayData();
+          console.log("Data loaded:", allData);
+          console.log(filteredData);
+
+          //displayData();
         })
         .catch((error) => {
           console.error("Error loading CSV:", error);
@@ -112,35 +280,75 @@
           ).innerHTML = `<p style="color:red">Error loading CSV: ${error.message}</p>`;
         });
 
+      const items = document.querySelectorAll(".item");
+      document.querySelectorAll(".select-btn").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+
+          // Close all other dropdowns
+          document.querySelectorAll(".select-btn.open").forEach((openBtn) => {
+            if (openBtn !== btn) {
+              openBtn.classList.remove("open");
+            }
+          });
+
+          // Toggle this one
+          btn.classList.toggle("open");
+        });
+      });
+
+      const original = document.querySelector(".btn-text").innerText;
+
+      items.forEach((item) => {
+        item.addEventListener("click", () => {
+          item.classList.toggle("checked");
+
+          let checked = document.querySelectorAll(".checked"),
+            btnText = document.querySelector(".btn-text");
+
+          if (checked.length > 0) {
+            btnText.innerText = `${checked.length} Selected`;
+          } else {
+            btnText.innerText = `${original}`;
+          }
+        });
+      });
+
       function populateFilterOptions() {
         // Get unique values for Tool_type
-        const toolTypes = [...new Set(allData.map((row) => row.Tool_type))];
-        const toolTypeSelect = document.getElementById("filterToolType");
+
+        const toolTypes = [
+          ...new Set(allData.map((row) => row.Tool_type.split("; ")).flat()),
+        ];
+        const toolTypeSelect = document.querySelector("#tool-types");
+
+        console.log(document.querySelector("#tool-types"));
         toolTypes.forEach((type) => {
-          const option = document.createElement("option");
-          option.value = type;
-          option.textContent = type;
-          toolTypeSelect.appendChild(option);
+          const li = document.createElement("li");
+          li.className = "item";
+
+          li.innerHTML = `<span class="checkbox">
+                <i class="fa-solid fa-check check-icon"></i>
+              </span>
+              <span class="item-text">${type}</span>`;
+
+          li.addEventListener("click", () => {
+            li.classList.toggle("checked");
+            applyFilter(); // manually trigger filter
+          });
+
+          console.log(li);
+          toolTypeSelect.appendChild(li);
         });
 
         // Get unique values for Category
-        const categories = [...new Set(allData.map((row) => row.Category))];
-        const categorySelect = document.getElementById("filterCategory");
-        categories.forEach((cat) => {
-          const option = document.createElement("option");
-          option.value = cat;
-          option.textContent = cat;
-          categorySelect.appendChild(option);
-        });
-
-        // Populate custom column dropdown
-        // const customColumnSelect = document.getElementById("customColumn");
-        // const columns = Object.keys(allData[0]);
-        // columns.forEach(col => {
-        //     const option = document.createElement("option");
-        //     option.value = col;
-        //     option.textContent = col;
-        //     customColumnSelect.appendChild(option);
+        // const categories = [...new Set(allData.map((row) => row.Category))];
+        // const categorySelect = document.getElementById("filterCategory");
+        // categories.forEach((cat) => {
+        //   const option = document.createElement("option");
+        //   option.value = cat;
+        //   option.textContent = cat;
+        //   categorySelect.appendChild(option);
         // });
       }
 
@@ -306,5 +514,3 @@
     </script>
   </body>
 </html>
-
-Power Analysis Tools Spring25_clean - Table.csv"
