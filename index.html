@@ -6,8 +6,17 @@
     <link rel="stylesheet" href="style.css" />
     <link
       rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link
+      rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=developer_mode_tv,graph_2,timeline,article"
+    />
+
     <style></style>
   </head>
   <body>
@@ -28,9 +37,9 @@
                 <option value="">Select model type(s)</option>
                 </select>
          -->
-            <div>
+            <div class="dropdown">
               <div class="select-btn">
-                <span class="btn-text">Select model type(s)</span>
+                <span class="btn-text modelTypebtn">Select model type(s)</span>
                 <span class="arrow-down">
                   <i class="fa-solid fa-chevron-down"></i>
                 </span>
@@ -43,7 +52,7 @@
                   </span>
                   <span class="item-text">T.test</span>
                 </li>
-                <li class="item">
+                <li class="item anova">
                   <span class="checkbox">
                     <i class="fa-solid fa-check check-icon"></i>
                   </span>
@@ -71,7 +80,7 @@
                   <span class="checkbox">
                     <i class="fa-solid fa-check check-icon"></i>
                   </span>
-                  <span class="item-text">Bayesian</span>
+                  <span class="item-text">Survival Analysis</span>
                 </li>
                 <li class="item">
                   <span class="checkbox">
@@ -91,9 +100,36 @@
 
           <div class="search-select">
             <p>Other</p>
-            <select class="search-dropdown" onchange="applyFilter()">
-              <option value="">Select tool type(s)</option>
-            </select>
+
+            <div>
+              <div class="select-btn">
+                <span class="btn-text">Select other specifications</span>
+                <span class="arrow-down">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </span>
+              </div>
+
+              <ul class="list-items">
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Bayesian</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">CI Estimation</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Contrasts</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
           <div class="search-select">
@@ -103,6 +139,7 @@
               id="filterToolType"
               onchange="applyFilter()"
             > -->
+            <div></div>
 
             <div>
               <div
@@ -117,54 +154,92 @@
               </div>
 
               <ul class="list-items" id="tool-types">
-                <!-- <li class="item">
-                    <span class="checkbox">
-                      <i class="fa-solid fa-check check-icon"></i>
-                    </span>
-                    <span class="item-text">T.test</span>
-                  </li>
-                  <li class="item">
-                    <span class="checkbox">
-                      <i class="fa-solid fa-check check-icon"></i>
-                    </span>
-                    <span class="item-text">ANOVA</span>
-                  </li>
-                  <li class="item">
-                    <span class="checkbox">
-                      <i class="fa-solid fa-check check-icon"></i>
-                    </span>
-                    <span class="item-text">Regression (Single-Level)</span>
-                  </li>
-                  <li class="item">
-                    <span class="checkbox">
-                      <i class="fa-solid fa-check check-icon"></i>
-                    </span>
-                    <span class="item-text">SEM</span>
-                  </li>
-                  <li class="item">
-                    <span class="checkbox">
-                      <i class="fa-solid fa-check check-icon"></i>
-                    </span>
-                    <span class="item-text">MLM</span>
-                  </li>
-                  <li class="item">
-                    <span class="checkbox">
-                      <i class="fa-solid fa-check check-icon"></i>
-                    </span>
-                    <span class="item-text">Bayesian</span>
-                  </li>
-                  <li class="item">
-                    <span class="checkbox">
-                      <i class="fa-solid fa-check check-icon"></i>
-                    </span>
-                    <span class="item-text">Correlation</span>
-                  </li>
-                  <li class="item">
-                    <span class="checkbox">
-                      <i class="fa-solid fa-check check-icon"></i>
-                    </span>
-                    <span class="item-text">Proportion</span>
-                  </li> -->
+                <li class="item-category">
+                  <span class="item-text">Point-and-Click</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Desktop App</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Shiny App</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">SPSS</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Stata</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Web App</span>
+                </li>
+
+                <li class="item-category">
+                  <span class="item-text">Code-based</span>
+                </li>
+
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">JavaScript</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Julia</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">LISREL</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">MATLAB</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Mplus</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Python</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">R</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">SAS</span>
+                </li>
               </ul>
             </div>
             <!-- <option value="">Select tool type(s)</option>
@@ -172,8 +247,8 @@
           </div>
 
           <div class="search-select">
-            <label>Price</label>
-            <select
+            <p>Price</p>
+            <!-- <select
               class="search-dropdown"
               id="filterPrice"
               onchange="applyFilter()"
@@ -182,29 +257,67 @@
               <option value="Free">Free</option>
               <option value="Up to $250">Up to $250</option>
               <option value="More than $500">More than $500</option>
-            </select>
+            </select> -->
+            <div>
+              <div class="select-btn">
+                <span class="btn-text">Select desired price(s)</span>
+                <span class="arrow-down">
+                  <i class="fa-solid fa-chevron-down"></i>
+                </span>
+              </div>
+
+              <ul class="list-items">
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Free</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">Up to $250</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">$250-$500</span>
+                </li>
+                <li class="item">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
+                  <span class="item-text">More than $500</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
 
       <div class="search-btn-container">
         <button style="margin-bottom: 20px">Clear</button>
-        <button class="search-btn">search</button>
+        <button class="search-btn" onclick="displayData()">Search</button>
         <p>
           Showing <span id="count" class="count">0</span> of
           <span id="total" class="count">0</span> tools
         </p>
       </div>
     </div>
-    <div class="filter-section">
+
+    <div id="resultContainer"></div>
+
+    <!-- <div class="filter-section">
       <h3>Filter Tools</h3>
 
-      <!-- Quick filters for common columns -->
+    
       <div class="filter-row">
         <label>Tool Type:</label>
-        <!-- <select id="filterToolType" onchange="applyFilter()">
+        <select id="filterToolType" onchange="applyFilter()">
           <option value="">All</option>
-        </select> -->
+        </select>
 
         <label>Category:</label>
         <select id="filterCategory" onchange="applyFilter()">
@@ -251,7 +364,7 @@
         Showing <span id="count" class="count">0</span> of
         <span id="total" class="count">0</span> tools
       </p>
-    </div>
+    </div> -->
 
     <div id="tableContainer"></div>
 
@@ -267,11 +380,9 @@
           allData = data; //array of objects
           filteredData = [...allData];
 
-          populateFilterOptions();
-          console.log("Data loaded:", allData);
-          console.log(filteredData);
-
-          //displayData();
+          // populateFilterOptions();
+          //   console.log("Data loaded:", allData);
+          //   console.log(filteredData);
         })
         .catch((error) => {
           console.error("Error loading CSV:", error);
@@ -280,12 +391,14 @@
           ).innerHTML = `<p style="color:red">Error loading CSV: ${error.message}</p>`;
         });
 
-      const items = document.querySelectorAll(".item");
+      //Logic for closing and opening dropdowns
+
+      console.log(document.querySelectorAll(".select-btn"));
       document.querySelectorAll(".select-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
 
-          // Close all other dropdowns
+          //close all other dropdowns
           document.querySelectorAll(".select-btn.open").forEach((openBtn) => {
             if (openBtn !== btn) {
               openBtn.classList.remove("open");
@@ -297,20 +410,55 @@
         });
       });
 
-      const original = document.querySelector(".btn-text").innerText;
+      let modelArr = [];
+      let toolArr = [];
+      let specificationArr = [];
+      let priceArr = [];
 
-      items.forEach((item) => {
-        item.addEventListener("click", () => {
-          item.classList.toggle("checked");
+      const dropdowns = document.querySelectorAll(".search-select");
+      dropdowns.forEach((dropdown) => {
+        const original = dropdown.querySelector(".btn-text");
+        const items = dropdown.querySelectorAll(".item");
+        const checkedSet = new Set();
+        items.forEach((item) => {
+          item.addEventListener("click", () => {
+            item.classList.toggle("checked");
 
-          let checked = document.querySelectorAll(".checked"),
-            btnText = document.querySelector(".btn-text");
+            let btnText = dropdown.querySelector(".btn-text");
+            let checked = document.querySelectorAll(".checked");
 
-          if (checked.length > 0) {
-            btnText.innerText = `${checked.length} Selected`;
-          } else {
-            btnText.innerText = `${original}`;
-          }
+            if (checkedSet.has(item.innerText)) {
+              checkedSet.delete(item.innerText);
+              btnText.innerText = [...checkedSet];
+            } else {
+              checkedSet.add(item.innerText);
+              btnText.innerText = [...checkedSet];
+            }
+
+            if (checkedSet.size == 0) {
+              btnText.innerText = original;
+            }
+
+            switch (dropdown.firstElementChild.innerText) {
+              case "Model":
+                modelArr = [...checkedSet];
+                console.log(modelArr);
+                break;
+              case "Type":
+                toolArr = [...checkedSet];
+                console.log(toolArr);
+                break;
+              case "Other":
+                specificationArr = [...checkedSet];
+                console.log(specificationArr);
+              case "Price":
+                priceArr = [...checkedSet];
+                console.log(priceArr);
+              default:
+                break;
+            }
+          });
+          const original = document.querySelector(".btn-text").innerText;
         });
       });
 
@@ -320,6 +468,8 @@
         const toolTypes = [
           ...new Set(allData.map((row) => row.Tool_type.split("; ")).flat()),
         ];
+        // toolTypes.push("Point-and-Click");
+        // toolTypes.push("Code-Based");
         const toolTypeSelect = document.querySelector("#tool-types");
 
         console.log(document.querySelector("#tool-types"));
@@ -334,10 +484,9 @@
 
           li.addEventListener("click", () => {
             li.classList.toggle("checked");
-            applyFilter(); // manually trigger filter
           });
 
-          console.log(li);
+          //   console.log(li);
           toolTypeSelect.appendChild(li);
         });
 
@@ -352,26 +501,31 @@
         // });
       }
 
+      //   window.location.reload()
+      console.log(document.querySelectorAll(".checked"));
+
       function applyFilter() {
         activeFilters = {};
 
-        // Get values from dropdowns
-        const toolType = document.getElementById("filterToolType").value;
-        const category = document.getElementById("filterCategory").value;
-        const working = document.getElementById("filterWorking").value;
-        const analysis = document.getElementById("filterAnalysis").value;
-        const price = document.getElementById("filterPrice").value;
-        const gui = document.getElementById("filterGUI").value;
+        // // Get values from dropdowns
+        // const toolType = document.getElementById("filterToolType").value;
+        // const category = document.getElementById("filterCategory").value;
+        // const working = document.getElementById("filterWorking").value;
+        // const analysis = document.getElementById("filterAnalysis").value;
+        // const price = document.getElementById("filterPrice").value;
+        // const gui = document.getElementById("filterGUI").value;
 
-        // Add to filters if selected
-        if (toolType) activeFilters.Tool_type = toolType;
-        if (category) activeFilters.Category = category;
-        if (working) activeFilters.Working = working;
-        if (analysis) activeFilters[analysis] = "YES"; // Filter by analysis type
-        if (price) activeFilters.Price = price;
-        if (gui) activeFilters.GUI = gui;
+        // // Add to filters if selected
+        // if (toolType) activeFilters.Tool_type = toolType;
+        // if (category) activeFilters.Category = category;
+        // if (working) activeFilters.Working = working;
+        // if (analysis) activeFilters[analysis] = "YES"; // Filter by analysis type
+        // if (price) activeFilters.Price = price;
+        // if (gui) activeFilters.GUI = gui;
 
-        filterData();
+        // filterData();
+
+        console.log(document.querySelector(".item"));
       }
 
       // function addCustomFilter() {
@@ -388,75 +542,176 @@
       // }
 
       function filterData() {
-        filteredData = allData.filter((row) => {
-          // Check all active filters
-          for (const [column, value] of Object.entries(activeFilters)) {
-            // For analysis columns (T.test, ANOVA, etc.), check if value is "Yes"
-            if (
-              [
-                "T.test",
-                "ANOVA",
-                "Single level regression",
-                "MLM",
-                "SEM",
-                "Proportion",
-                "Correlation",
-                "Survival analysis",
-                "Other",
-                "CI Estimation",
-                "Bayesian",
-              ].includes(column)
-            ) {
-              if (row[column] !== "YES") return false;
-            } else {
-              // For other columns, check exact match
-              if (row[column] !== value) return false;
-            }
-          }
-          return true;
-        });
-
-        displayData();
+        // filteredData = allData.filter((row) => {
+        //   // Check all active filters
+        //   for (const [column, value] of Object.entries(activeFilters)) {
+        //     // For analysis columns (T.test, ANOVA, etc.), check if value is "Yes"
+        //     if (
+        //       [
+        //         "T.test",
+        //         "ANOVA",
+        //         "Single level regression",
+        //         "MLM",
+        //         "SEM",
+        //         "Proportion",
+        //         "Correlation",
+        //         "Survival analysis",
+        //         "Other",
+        //         "CI Estimation",
+        //         "Bayesian",
+        //       ].includes(column)
+        //     ) {
+        //       if (row[column] !== "YES") return false;
+        //     } else {
+        //       // For other columns, check exact match
+        //       if (row[column] !== value) return false;
+        //     }
+        //   }
+        //   return true;
+        // });
+        // displayData();
       }
 
       function displayData() {
-        const container = document.getElementById("tableContainer");
-
-        if (filteredData.length === 0) {
-          container.innerHTML = "<p>No data matches your filters</p>";
-          updateCounts();
-          return;
-        }
-
-        const columns = Object.keys(filteredData[0]);
-
-        let html = `<table>
-                <thead>
-                    <tr>${columns.map((col) => `<th>${col}</th>`).join("")}</tr>
-                </thead>
-                <tbody>`;
-
-        filteredData.forEach((row) => {
-          html += "<tr>";
-          columns.forEach((col) => {
-            const value = row[col];
-            let displayValue = value;
-
-            // Highlight "Yes" values for analysis columns
-            if (["Yes", "yes", "Y", "y"].includes(value)) {
-              displayValue = `<span style="color:green;font-weight:bold">${value}</span>`;
-            } else if (["No", "no", "N", "n"].includes(value)) {
-              displayValue = `<span style="color:gray">${value}</span>`;
+        console.log(toolArr, modelArr, specificationArr, priceArr);
+        const filterTools = (
+          allData,
+          toolArr,
+          modelArr,
+          specificationArr,
+          priceArr
+        ) => {
+          return allData.filter((tool) => {
+            //Tool type
+            if (toolArr.length) {
+              const types = tool.Tool_type.split(";").map((t) => t.trim());
+              if (!toolArr.some((t) => types.includes(t))) {
+                return false;
+              }
             }
 
-            html += `<td>${displayValue || ""}</td>`;
+            //model
+            if (modelArr.length && !modelArr.some((m) => tool[m] === "YES")) {
+              return false;
+            }
+
+            //Specification
+            if (
+              specificationArr.length &&
+              !specificationArr.some((s) => tool[s] === "YES")
+            ) {
+              return false;
+            }
+
+            if (priceArr.length && !priceArr.includes(tool.Price)) {
+              return false;
+            }
+
+            return true;
           });
-          html += "</tr>";
+        };
+
+        const results = filterTools(
+          allData,
+          toolArr,
+          modelArr,
+          specificationArr,
+          priceArr
+        );
+
+        console.log(results);
+        let resultContainer = document.getElementById("resultContainer");
+        resultContainer.innerHTML = null;
+        results.forEach((tool) => {
+          let newEl = document.createElement("div");
+          newEl.className = "result";
+
+          newEl.innerHTML = `<p>${tool.Tool_name}</p>
+          <i class='fa-regular fa-star'></i>
+           
+          <div style="display: flex;">
+            <span class="material-symbols-outlined">
+            graph_2
+            </span>
+            <span class="material-symbols-outlined">
+              timeline
+            </span>
+          </div>
+            
+
+            <div style="display: flex;">
+              <span class="material-symbols-outlined">
+            developer_mode_tv
+            </span>
+              <i class="fa-solid fa-sack-dollar"></i>
+              <span class="material-symbols-outlined">
+            article
+            </span>
+              </div>
+              
+
+          `;
+
+          resultContainer.appendChild(newEl);
         });
 
-        html += "</tbody></table>";
-        container.innerHTML = html;
-        updateCounts();
+        // console.log(allData);
+        // let filteredTools = new Set();
+
+        // allData.forEach((tool) => {
+        //   tool.Tool_type.split(";").forEach((type) => {
+        //     if (toolArr.includes(type.trimStart())) {
+        //       console.log(tool);
+        //       filteredTools.add(tool);
+        //     }
+        //   });
+        // });
+
+        // console.log(filteredTools);
+
+        // let newFiltered = new Set();
+
+        // modelArr.forEach((model) => {
+        //   Array.from(filteredTools).forEach((tool) => {
+        //     if (tool[model] === "YES") {
+        //       newFiltered.add(tool);
+        //     }
+        //   });
+        // });
+
+        // console.log(newFiltered);
+        // let newerFiltered = new Set();
+        // specificationArr.forEach((specification) => {
+        //   Array.from(newFiltered).forEach((tool) => {
+        //     if (tool[specification] === "YES") {
+        //       newerFiltered.add(tool);
+        //     }
+        //   });
+        // });
+
+        // console.log(newerFiltered);
+
+        // console.log(x);
+
+        // x=x.filter((tool) => {
+        //   priceArr.includes(tool["Price"].trim());
+        // });
+
+        // console.log(x);
+        // // filteredTools = filteredTools.filter(tool=>{
+        //   console.log(tool)
+        //   // modelArr.every(model=>{console.log(tool[model])})
+
+        // })
+
+        // filteredTools.filter(())
+        // filteredTools.forEach(tool=>{
+        //   modelArr.forEach(model=>{
+        //     if(tool[model] === "YES" ){
+        //         keep tool, else remove
+        //     }
+        //   })
+        // })
       }
 
       function updateCounts() {
