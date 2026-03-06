@@ -14,7 +14,7 @@
     />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=developer_mode_tv,graph_2,timeline,article"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=developer_mode_tv,graph_2,timeline"
     />
 
     <style></style>
@@ -62,7 +62,7 @@
                   <span class="checkbox">
                     <i class="fa-solid fa-check check-icon"></i>
                   </span>
-                  <span class="item-text">Regression (Single-Level)</span>
+                  <span class="item-text">Single level regression</span>
                 </li>
                 <li class="item">
                   <span class="checkbox">
@@ -154,20 +154,28 @@
               </div>
 
               <ul class="list-items" id="tool-types">
-                <li class="item-category">
+                <!-- <li class="item-category">
+                  <span class="item-text">Point-and-Click</span>
+                </li> -->
+
+                <li class="item-category" data-category="Point-and-Click">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
                   <span class="item-text">Point-and-Click</span>
                 </li>
+
                 <li class="item">
                   <span class="checkbox">
                     <i class="fa-solid fa-check check-icon"></i>
                   </span>
-                  <span class="item-text">Desktop App</span>
+                  <span class="item-text">Computer App</span>
                 </li>
                 <li class="item">
                   <span class="checkbox">
                     <i class="fa-solid fa-check check-icon"></i>
                   </span>
-                  <span class="item-text">Shiny App</span>
+                  <span class="item-text">Shiny</span>
                 </li>
                 <li class="item">
                   <span class="checkbox">
@@ -188,7 +196,13 @@
                   <span class="item-text">Web App</span>
                 </li>
 
-                <li class="item-category">
+                <!-- <li class="item-category">
+                  <span class="item-text">Code-based</span>
+                </li> -->
+                <li class="item-category" data-category="Code-based">
+                  <span class="checkbox">
+                    <i class="fa-solid fa-check check-icon"></i>
+                  </span>
                   <span class="item-text">Code-based</span>
                 </li>
 
@@ -214,7 +228,7 @@
                   <span class="checkbox">
                     <i class="fa-solid fa-check check-icon"></i>
                   </span>
-                  <span class="item-text">MATLAB</span>
+                  <span class="item-text">Matlab</span>
                 </li>
                 <li class="item">
                   <span class="checkbox">
@@ -248,16 +262,7 @@
 
           <div class="search-select">
             <p>Price</p>
-            <!-- <select
-              class="search-dropdown"
-              id="filterPrice"
-              onchange="applyFilter()"
-            >
-              <option value="">Select desired price</option>
-              <option value="Free">Free</option>
-              <option value="Up to $250">Up to $250</option>
-              <option value="More than $500">More than $500</option>
-            </select> -->
+
             <div>
               <div class="select-btn">
                 <span class="btn-text">Select desired price(s)</span>
@@ -279,17 +284,17 @@
                   </span>
                   <span class="item-text">Up to $250</span>
                 </li>
-                <li class="item">
+                <!-- <li class="item">
                   <span class="checkbox">
                     <i class="fa-solid fa-check check-icon"></i>
                   </span>
                   <span class="item-text">$250-$500</span>
-                </li>
+                </li> -->
                 <li class="item">
                   <span class="checkbox">
                     <i class="fa-solid fa-check check-icon"></i>
                   </span>
-                  <span class="item-text">More than $500</span>
+                  <span class="item-text">More than $250</span>
                 </li>
               </ul>
             </div>
@@ -298,12 +303,20 @@
       </div>
 
       <div class="search-btn-container">
-        <button style="margin-bottom: 20px">Clear</button>
+        <label class="recommended-toggle">
+          <input type="checkbox" id="recommendedOnly" />
+          <span>Recommended</span>
+        </label>
+        <button
+          id="clearBtn"
+          style="margin-bottom: 20px"
+          onclick="clearFilters()"
+        >
+          Clear
+        </button>
+
         <button class="search-btn" onclick="displayData()">Search</button>
-        <p>
-          Showing <span id="count" class="count">0</span> of
-          <span id="total" class="count">0</span> tools
-        </p>
+        <p id="elementCount"></p>
       </div>
     </div>
 
@@ -373,7 +386,7 @@
       let allData = [];
       let filteredData = [];
       let activeFilters = {};
-
+      let recommendedOnly = false;
       // Load the CSV when page loads
       d3.csv(csvFilePath)
         .then((data) => {
@@ -415,50 +428,85 @@
       let specificationArr = [];
       let priceArr = [];
 
+      function syncDropdownSelection(dropdown) {
+        const label = dropdown.firstElementChild?.innerText.trim(); //"Model" / "Type" / "Other" / "Price"
+        const btnTextEl = dropdown.querySelector(".btn-text");
+
+        // get checked item names from DOM (source of truth)
+        const selected = [
+          ...dropdown.querySelectorAll(".item.checked .item-text"),
+        ].map((el) => el.textContent.trim());
+
+        //laceholder text based on dropdown label
+        const placeholders = {
+          Model: "Select model type(s)",
+          Type: "Select tool type(s)",
+          Other: "Select other specifications",
+          Price: "Select desired price(s)",
+        };
+
+        btnTextEl.textContent = selected.length
+          ? selected.join(", ")
+          : placeholders[label];
+
+        // update the correct array used by displayData()
+        switch (label) {
+          case "Model":
+            modelArr = selected;
+            break;
+          case "Type":
+            toolArr = selected;
+            break;
+          case "Other":
+            specificationArr = selected;
+            break;
+          case "Price":
+            priceArr = selected;
+            break;
+        }
+      }
+
       const dropdowns = document.querySelectorAll(".search-select");
       dropdowns.forEach((dropdown) => {
-        const original = dropdown.querySelector(".btn-text");
+        //only for the "Type" dropdown: category toggles all children
+        if (dropdown.firstElementChild?.innerText === "Type") {
+          const categories = dropdown.querySelectorAll(".item-category");
+
+          categories.forEach((cat) => {
+            cat.addEventListener("click", (e) => {
+              e.stopPropagation();
+
+              const items = getCategoryItems(cat);
+              const allChecked =
+                items.length &&
+                items.every((i) => i.classList.contains("checked"));
+
+              // If all are checked, uncheck all. Otherwise check all.
+              toggleCategory(cat, !allChecked);
+            });
+          });
+
+          // keep header state correct on load and whenever user clicks items
+          syncAllCategoryStatesWithin(dropdown);
+        }
+
+        // const original = dropdown.querySelector(".btn-text");
         const items = dropdown.querySelectorAll(".item");
         const checkedSet = new Set();
         items.forEach((item) => {
-          item.addEventListener("click", () => {
+          item.addEventListener("click", (e) => {
+            e.stopPropagation();
             item.classList.toggle("checked");
 
-            let btnText = dropdown.querySelector(".btn-text");
-            let checked = document.querySelectorAll(".checked");
+            //after any item click, recompute from DOM
+            syncDropdownSelection(dropdown);
+            syncAllCategoryStatesWithin(dropdown);
 
-            if (checkedSet.has(item.innerText)) {
-              checkedSet.delete(item.innerText);
-              btnText.innerText = [...checkedSet];
-            } else {
-              checkedSet.add(item.innerText);
-              btnText.innerText = [...checkedSet];
-            }
-
-            if (checkedSet.size == 0) {
-              btnText.innerText = original;
-            }
-
-            switch (dropdown.firstElementChild.innerText) {
-              case "Model":
-                modelArr = [...checkedSet];
-                console.log(modelArr);
-                break;
-              case "Type":
-                toolArr = [...checkedSet];
-                console.log(toolArr);
-                break;
-              case "Other":
-                specificationArr = [...checkedSet];
-                console.log(specificationArr);
-              case "Price":
-                priceArr = [...checkedSet];
-                console.log(priceArr);
-              default:
-                break;
+            // if this is the Type dropdown, also refresh category header visuals
+            if (dropdown.firstElementChild?.innerText.trim() === "Type") {
+              syncAllCategoryStatesWithin(dropdown);
             }
           });
-          const original = document.querySelector(".btn-text").innerText;
         });
       });
 
@@ -468,8 +516,7 @@
         const toolTypes = [
           ...new Set(allData.map((row) => row.Tool_type.split("; ")).flat()),
         ];
-        // toolTypes.push("Point-and-Click");
-        // toolTypes.push("Code-Based");
+
         const toolTypeSelect = document.querySelector("#tool-types");
 
         console.log(document.querySelector("#tool-types"));
@@ -579,9 +626,13 @@
           toolArr,
           modelArr,
           specificationArr,
-          priceArr
+          priceArr,
+          recommendedOnly
         ) => {
           return allData.filter((tool) => {
+            if (recommendedOnly && tool.Recommended !== "YES") {
+              return false;
+            }
             //Tool type
             if (toolArr.length) {
               const types = tool.Tool_type.split(";").map((t) => t.trim());
@@ -603,8 +654,16 @@
               return false;
             }
 
-            if (priceArr.length && !priceArr.includes(tool.Price)) {
-              return false;
+            if (priceArr.length) {
+              // map More than $500 to More than $250 to match the csv
+              const mappedPrices = priceArr.map((p) => {
+                if (p === "More than $250") return "More than $500";
+                return p;
+              });
+
+              if (!mappedPrices.includes(tool.Price)) {
+                return false;
+              }
             }
 
             return true;
@@ -616,44 +675,127 @@
           toolArr,
           modelArr,
           specificationArr,
-          priceArr
+          priceArr,
+          recommendedOnly
+        );
+        results.sort((a, b) =>
+          (a.Tool_name || "").localeCompare(b.Tool_name || "", undefined, {
+            sensitivity: "base",
+          })
         );
 
         console.log(results);
+
         let resultContainer = document.getElementById("resultContainer");
         resultContainer.innerHTML = null;
+        const MODEL_KEYS = [
+          "ANOVA",
+          "T.test",
+          "Proportion",
+          "Correlation",
+          "MLM",
+          "SEM",
+          "Single level regression",
+          "Survival analysis",
+          "Other",
+        ];
+
+        const SPEC_KEYS = ["Bayesian", "CI Estimation", "Contrasts"];
         results.forEach((tool) => {
           let newEl = document.createElement("div");
           newEl.className = "result";
 
-          newEl.innerHTML = `<p>${tool.Tool_name}</p>
-          <i class='fa-regular fa-star'></i>
-           
-          <div style="display: flex;">
+          const yesModels = MODEL_KEYS.filter((key) => tool[key] === "YES");
+          const yesSpecs = SPEC_KEYS.filter((key) => tool[key] === "YES");
+
+          const otherValue =
+            tool.Other && tool.Other !== "NO" ? tool.Other : "";
+
+          let recom = ``;
+          tool.Recommended === "YES"
+            ? (recom = `<div style="display:flex; gap:8px; align-items:center;">
+            <i class='fa-regular fa-star'></i> 
+            <p style ="margin: 0;">Recommended</p>
+
+          </div>`)
+            : (recom = ``);
+
+          let specifications = ``;
+          yesSpecs.length
+            ? (specifications = `<div style="display:flex; gap:8px; align-items:center;">
+            
             <span class="material-symbols-outlined">
-            graph_2
+            timeline
             </span>
-            <span class="material-symbols-outlined">
-              timeline
-            </span>
+            ${yesSpecs.join(", ")}
+
+            </div>`)
+            : (specifications = ``);
+
+          let models = ``;
+          if (yesModels.length || otherValue) {
+            models = `
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span class="material-symbols-outlined" style="rotate:270deg;">
+        graph_2
+      </span>
+      <span>
+      ${yesModels.length ? yesModels.join(", ") : ""}
+        ${yesModels.length && otherValue ? " | " : ""}
+        ${otherValue ? otherValue : ""}
+        </span>
+    </div>
+  `;
+          }
+          newEl.innerHTML = `
+          <div style="padding: 10px; margin-bottom:5px; margin-top:10px; display:flex; flex-direction:column; gap:10px; border-bottom: 2px solid #4CAF50">
+            
+            
+            <a href="${
+              tool.Website
+            }" target="_blank" style="margin: 0;  font-weight: 500; font-weight:700; font-style: Medium; font-size: 16px; leading-trim: NONE; line-height: 100%;
+          letter-spacing: 0%; color: black; text-decoration: none;
+">        ${toTitleCase(tool.Tool_name)}
+            </a>
+          ${recom} 
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; ">
+            ${models}
+            ${specifications}
           </div>
             
 
-            <div style="display: flex;">
+            <div style="display:flex; gap:10px; align-items:center;  flex-wrap:wrap;">
+
               <span class="material-symbols-outlined">
             developer_mode_tv
             </span>
-              <i class="fa-solid fa-sack-dollar"></i>
-              <span class="material-symbols-outlined">
-            article
-            </span>
+            <p style="margin:0;" ">${tool.Tool_type}</p>
+            <i class="fa-solid fa-sack-dollar"></i>
+            <p style="margin:0;" >${tool.Price}</p>
+            <i class="fa-regular fa-file-lines"></i>
+            <p style="margin:0;">${tool.Documentation} documentation</p>
+
               </div>
+
+            <div>
+              <p style="margin:0; font-family: Roboto; font-weight: 400; font-style: Italic; font-size: 14px; line-height: 100%; 
+              letter-spacing: 0%; color:#9E9E9E">${tool["APA.Citation"]}</p>
               
+              </div>
+        </div>  
 
           `;
 
           resultContainer.appendChild(newEl);
         });
+        let toolCount = document.getElementById("elementCount");
+
+        toolCount.innerHTML = `
+       
+          Showing <span id="count" class="count">${results.length}</span> of
+          <span id="total" class="count">${allData.length}</span> tools
+       
+        `;
 
         // console.log(allData);
         // let filteredTools = new Set();
@@ -719,21 +861,129 @@
         document.getElementById("total").textContent = allData.length;
       }
 
-      // function clearFilters() {
-      //     // Reset all dropdowns
-      //     document.getElementById("filterToolType").value = "";
-      //     document.getElementById("filterCategory").value = "";
-      //     document.getElementById("filterWorking").value = "";
-      //     document.getElementById("filterAnalysis").value = "";
-      //     document.getElementById("filterPrice").value = "";
-      //     document.getElementById("filterGUI").value = "";
-      //     document.getElementById("customColumn").value = "";
-      //     document.getElementById("customValue").value = "";
+      function getCategoryItems(categoryEl) {
+        const items = [];
+        let el = categoryEl.nextElementSibling;
 
-      //     activeFilters = {};
-      //     filteredData = [...allData];
-      //     displayData();
-      // }
+        while (el && !el.classList.contains("item-category")) {
+          if (el.classList.contains("item")) items.push(el);
+          el = el.nextElementSibling;
+        }
+
+        return items;
+      }
+
+      function setCategoryVisualState(categoryEl, items) {
+        const checkedCount = items.filter((i) =>
+          i.classList.contains("checked")
+        ).length;
+
+        categoryEl.classList.remove("checked", "indeterminate");
+
+        if (checkedCount === 0) return;
+        if (checkedCount === items.length) {
+          categoryEl.classList.add("checked");
+        } else {
+          categoryEl.classList.add("indeterminate"); // optional styling if you want
+        }
+      }
+
+      function toggleCategory(categoryEl, forceChecked /* true/false */) {
+        const items = getCategoryItems(categoryEl);
+
+        items.forEach((item) => {
+          item.classList.toggle("checked", forceChecked);
+
+          const isChecked = item.classList.contains("checked");
+          if (isChecked !== forceChecked) return;
+        });
+
+        const typeDropdown = categoryEl.closest(".search-select");
+        const btnTextEl = typeDropdown.querySelector(".btn-text");
+
+        const checkedItems = [
+          ...typeDropdown.querySelectorAll(".item.checked"),
+        ].map((li) => li.innerText.trim());
+
+        toolArr = checkedItems;
+        btnTextEl.innerText = checkedItems.length
+          ? checkedItems
+          : "Select tool type(s)";
+
+        setCategoryVisualState(categoryEl, items);
+      }
+
+      function syncAllCategoryStatesWithin(dropdownEl) {
+        dropdownEl.querySelectorAll(".item-category").forEach((cat) => {
+          const items = getCategoryItems(cat);
+          setCategoryVisualState(cat, items);
+        });
+      }
+
+      function clearFilters() {
+        //uncheck every selected item
+        document.querySelectorAll(".item.checked").forEach((item) => {
+          item.classList.remove("checked");
+        });
+
+        // also reset category headers
+        document
+          .querySelectorAll(
+            ".item-category.checked, .item-category.indeterminate"
+          )
+          .forEach((cat) => cat.classList.remove("checked", "indeterminate"));
+
+        //reset dropdown button text
+        document.querySelectorAll(".search-select").forEach((dropdown) => {
+          const label = dropdown.firstElementChild?.innerText.trim();
+          const btnText = dropdown.querySelector(".btn-text");
+
+          const placeholders = {
+            Model: "Select model type(s)",
+            Type: "Select tool type(s)",
+            Other: "Select other specifications",
+            Price: "Select desired price(s)",
+          };
+
+          if (btnText && placeholders[label]) {
+            btnText.textContent = placeholders[label];
+          }
+        });
+
+        //eset filter arrays
+        modelArr = [];
+        toolArr = [];
+        specificationArr = [];
+        priceArr = [];
+
+        document.getElementById("resultContainer").innerHTML = "";
+        document.getElementById("elementCount").innerHTML = "";
+        document
+          .querySelectorAll(".select-btn.open")
+          .forEach((btn) => btn.classList.remove("open"));
+
+        //reset recommended toggle
+        recommendedOnly = false;
+        const recBox = document.getElementById("recommendedOnly");
+        if (recBox) recBox.checked = false;
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const recBox = document.getElementById("recommendedOnly");
+        if (!recBox) return;
+
+        recBox.addEventListener("change", (e) => {
+          recommendedOnly = e.target.checked;
+        });
+      });
+
+      function toTitleCase(str) {
+        return (str || "")
+          .toLowerCase()
+          .split(" ")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" ");
+      }
 
       // Helper functions you can use in console
       function findToolsWithFeature(feature) {
