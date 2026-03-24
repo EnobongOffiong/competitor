@@ -31,7 +31,7 @@
       <div>
         <div class="search-select-container">
           <div class="search-select">
-            <p>Model</p>
+            <div style="width: 44px"><p>Model</p></div>
 
             <!-- <select class="search-dropdown" onclick="showCheckboxes()" onchange="applyFilter()">
                 <option value="">Select model type(s)</option>
@@ -99,7 +99,7 @@
           </div>
 
           <div class="search-select">
-            <p>Other</p>
+            <div style="width: 44px"><p>Other</p></div>
 
             <div>
               <div class="select-btn">
@@ -133,7 +133,8 @@
           </div>
 
           <div class="search-select">
-            <p>Type</p>
+            <div style="width: 44px"><p>Type</p></div>
+
             <!-- <select
               class="search-dropdown"
               id="filterToolType"
@@ -261,7 +262,7 @@
           </div>
 
           <div class="search-select">
-            <p>Price</p>
+            <div style="width: 44px"><p>Price</p></div>
 
             <div>
               <div class="select-btn">
@@ -303,9 +304,15 @@
       </div>
 
       <div class="search-btn-container">
-        <label class="recommended-toggle">
-          <input type="checkbox" id="recommendedOnly" />
+        <label class="recommended-toggle" id="recommendedToggle">
+          <span class="recommended-checkbox" id="recommendedCheckbox">
+            <i class="fa-solid fa-check check-icon"></i>
+          </span>
           <span>Recommended</span>
+          <span class="recommended-tooltip">
+            We’ve selected the tools with the best coverage, design, and
+            documentation.
+          </span>
         </label>
         <button
           id="clearBtn"
@@ -386,16 +393,13 @@
       let allData = [];
       let filteredData = [];
       let activeFilters = {};
+      let lastResultIds = [];
       let recommendedOnly = false;
       // Load the CSV when page loads
       d3.csv(csvFilePath)
         .then((data) => {
           allData = data; //array of objects
           filteredData = [...allData];
-
-          // populateFilterOptions();
-          //   console.log("Data loaded:", allData);
-          //   console.log(filteredData);
         })
         .catch((error) => {
           console.error("Error loading CSV:", error);
@@ -411,22 +415,32 @@
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
 
-          //close all other dropdowns
-          document.querySelectorAll(".select-btn.open").forEach((openBtn) => {
-            if (openBtn !== btn) {
-              openBtn.classList.remove("open");
-            }
-          });
+          const wasOpen = btn.classList.contains("open");
+          closeAllDropdowns();
 
-          // Toggle this one
-          btn.classList.toggle("open");
+          if (!wasOpen) {
+            btn.classList.add("open");
+          }
         });
+      });
+      document.addEventListener("click", (e) => {
+        const clickedInsideDropdown = e.target.closest(".search-select");
+
+        if (!clickedInsideDropdown) {
+          closeAllDropdowns();
+        }
       });
 
       let modelArr = [];
       let toolArr = [];
       let specificationArr = [];
       let priceArr = [];
+
+      function closeAllDropdowns() {
+        document.querySelectorAll(".select-btn.open").forEach((btn) => {
+          btn.classList.remove("open");
+        });
+      }
 
       function syncDropdownSelection(dropdown) {
         const label = dropdown.firstElementChild?.innerText.trim(); //"Model" / "Type" / "Other" / "Price"
@@ -444,7 +458,40 @@
           Other: "Select other specifications",
           Price: "Select desired price(s)",
         };
+        if (label === "Type") {
+          const categoryLabels = [];
+          const remainingItems = [];
 
+          dropdown.querySelectorAll(".item-category").forEach((cat) => {
+            const catItems = getCategoryItems(cat);
+            const allChecked =
+              catItems.length > 0 &&
+              catItems.every((item) => item.classList.contains("checked"));
+
+            if (allChecked) {
+              categoryLabels.push(
+                cat.querySelector(".item-text").textContent.trim()
+              );
+            } else {
+              catItems.forEach((item) => {
+                if (item.classList.contains("checked")) {
+                  remainingItems.push(
+                    item.querySelector(".item-text").textContent.trim()
+                  );
+                }
+              });
+            }
+          });
+
+          const displaySelections = [...categoryLabels, ...remainingItems];
+
+          btnTextEl.textContent = displaySelections.length
+            ? displaySelections.join(", ")
+            : placeholders[label];
+
+          toolArr = selected;
+          return;
+        }
         btnTextEl.textContent = selected.length
           ? selected.join(", ")
           : placeholders[label];
@@ -551,75 +598,8 @@
       //   window.location.reload()
       console.log(document.querySelectorAll(".checked"));
 
-      function applyFilter() {
-        activeFilters = {};
-
-        // // Get values from dropdowns
-        // const toolType = document.getElementById("filterToolType").value;
-        // const category = document.getElementById("filterCategory").value;
-        // const working = document.getElementById("filterWorking").value;
-        // const analysis = document.getElementById("filterAnalysis").value;
-        // const price = document.getElementById("filterPrice").value;
-        // const gui = document.getElementById("filterGUI").value;
-
-        // // Add to filters if selected
-        // if (toolType) activeFilters.Tool_type = toolType;
-        // if (category) activeFilters.Category = category;
-        // if (working) activeFilters.Working = working;
-        // if (analysis) activeFilters[analysis] = "YES"; // Filter by analysis type
-        // if (price) activeFilters.Price = price;
-        // if (gui) activeFilters.GUI = gui;
-
-        // filterData();
-
-        console.log(document.querySelector(".item"));
-      }
-
-      // function addCustomFilter() {
-      //     const column = document.getElementById("customColumn").value;
-      //     const value = document.getElementById("customValue").value;
-
-      //     if (!column || !value) {
-      //         alert("Please select a column and enter a value");
-      //         return;
-      //     }
-
-      //     activeFilters[column] = value;
-      //     filterData();
-      // }
-
-      function filterData() {
-        // filteredData = allData.filter((row) => {
-        //   // Check all active filters
-        //   for (const [column, value] of Object.entries(activeFilters)) {
-        //     // For analysis columns (T.test, ANOVA, etc.), check if value is "Yes"
-        //     if (
-        //       [
-        //         "T.test",
-        //         "ANOVA",
-        //         "Single level regression",
-        //         "MLM",
-        //         "SEM",
-        //         "Proportion",
-        //         "Correlation",
-        //         "Survival analysis",
-        //         "Other",
-        //         "CI Estimation",
-        //         "Bayesian",
-        //       ].includes(column)
-        //     ) {
-        //       if (row[column] !== "YES") return false;
-        //     } else {
-        //       // For other columns, check exact match
-        //       if (row[column] !== value) return false;
-        //     }
-        //   }
-        //   return true;
-        // });
-        // displayData();
-      }
-
       function displayData() {
+        closeAllDropdowns();
         console.log(toolArr, modelArr, specificationArr, priceArr);
         const filterTools = (
           allData,
@@ -704,6 +684,7 @@
         results.forEach((tool) => {
           let newEl = document.createElement("div");
           newEl.className = "result";
+          newEl.onclick = () => window.open(tool.Website, "_blank");
 
           const yesModels = MODEL_KEYS.filter((key) => tool[key] === "YES");
           const yesSpecs = SPEC_KEYS.filter((key) => tool[key] === "YES");
@@ -748,16 +729,24 @@
   `;
           }
           newEl.innerHTML = `
-          <div style="padding: 10px; margin-bottom:5px; margin-top:10px; display:flex; flex-direction:column; gap:10px; border-bottom: 2px solid #4CAF50">
+          <div class="result-card">
             
+            ${
+              tool.Recommended === "YES"
+                ? `<div class="recommended-badge">
+            <i class="fa-regular fa-star"></i>
+            <p style="margin:0;">Recommended</p>
+          </div>`
+                : ``
+            }
             
             <a href="${
               tool.Website
-            }" target="_blank" style="margin: 0;  font-weight: 500; font-weight:700; font-style: Medium; font-size: 16px; leading-trim: NONE; line-height: 100%;
-          letter-spacing: 0%; color: black; text-decoration: none;
-">        ${toTitleCase(tool.Tool_name)}
+            }" target="_blank" onclick="event.stopPropagation()"; class="result-title">        ${toTitleCase(
+            tool.Tool_name
+          )}
             </a>
-          ${recom} 
+          
           <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; ">
             ${models}
             ${specifications}
@@ -765,17 +754,27 @@
             
 
             <div style="display:flex; gap:10px; align-items:center;  flex-wrap:wrap;">
-
+              <div style="display:flex; align-items:center; gap: 3px;">
               <span class="material-symbols-outlined">
             developer_mode_tv
             </span>
-            <p style="margin:0;" ">${tool.Tool_type}</p>
+            <p style="margin:0;" ">${(tool.Tool_type || "")
+              .split(";")
+              .map((t) => t.trim())
+              .join(", ")}</p>
+              </div>
+              <div style="display:flex; align-items:center; gap: 3px;">
             <i class="fa-solid fa-sack-dollar"></i>
             <p style="margin:0;" >${tool.Price}</p>
+            </div>
+
+            <div style="display:flex; align-items:center; gap: 3px;">
             <i class="fa-regular fa-file-lines"></i>
             <p style="margin:0;">${tool.Documentation} documentation</p>
-
               </div>
+              </div>
+
+              
 
             <div>
               <p style="margin:0; font-family: Roboto; font-weight: 400; font-style: Italic; font-size: 14px; line-height: 100%; 
@@ -888,29 +887,21 @@
         }
       }
 
-      function toggleCategory(categoryEl, forceChecked /* true/false */) {
+      function toggleCategory(categoryEl, forceChecked /*true, false*/) {
         const items = getCategoryItems(categoryEl);
 
         items.forEach((item) => {
           item.classList.toggle("checked", forceChecked);
-
-          const isChecked = item.classList.contains("checked");
-          if (isChecked !== forceChecked) return;
         });
 
         const typeDropdown = categoryEl.closest(".search-select");
-        const btnTextEl = typeDropdown.querySelector(".btn-text");
-
-        const checkedItems = [
-          ...typeDropdown.querySelectorAll(".item.checked"),
-        ].map((li) => li.innerText.trim());
-
-        toolArr = checkedItems;
-        btnTextEl.innerText = checkedItems.length
-          ? checkedItems
-          : "Select tool type(s)";
+        toolArr = [
+          ...typeDropdown.querySelectorAll(".item.checked .item-text"),
+        ].map((el) => el.textContent.trim());
 
         setCategoryVisualState(categoryEl, items);
+        syncDropdownSelection(typeDropdown);
+        syncAllCategoryStatesWithin(typeDropdown);
       }
 
       function syncAllCategoryStatesWithin(dropdownEl) {
@@ -922,6 +913,7 @@
 
       function clearFilters() {
         //uncheck every selected item
+        closeAllDropdowns();
         document.querySelectorAll(".item.checked").forEach((item) => {
           item.classList.remove("checked");
         });
@@ -964,57 +956,52 @@
 
         //reset recommended toggle
         recommendedOnly = false;
-        const recBox = document.getElementById("recommendedOnly");
-        if (recBox) recBox.checked = false;
+        const recCheckbox = document.querySelector(".recommended-checkbox");
+        if (recCheckbox) {
+          recCheckbox.classList.remove("checked");
+        }
       }
 
       document.addEventListener("DOMContentLoaded", () => {
         const recBox = document.getElementById("recommendedOnly");
-        if (!recBox) return;
+        if (recBox) {
+          recBox.addEventListener("change", (e) => {
+            recommendedOnly = e.target.checked;
+          });
+        }
 
-        recBox.addEventListener("change", (e) => {
-          recommendedOnly = e.target.checked;
-        });
+        const recToggle = document.getElementById("recommendedToggle");
+        const recCheckbox = document.getElementById("recommendedCheckbox");
+
+        if (recToggle && recCheckbox) {
+          recToggle.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            recCheckbox.classList.toggle("checked");
+            recommendedOnly = recCheckbox.classList.contains("checked");
+
+            console.log("recommendedOnly:", recommendedOnly);
+          });
+        }
       });
+
+      // const recToggle = document.querySelector(".recommended-toggle");
+      // const recCheckbox = document.querySelector(".recommended-checkbox");
+
+      // recToggle.addEventListener("click", () => {
+      //   recCheckbox.classList.toggle("checked");
+      //   recommendedOnly = recCheckbox.classList.contains("checked");
+      // });
 
       function toTitleCase(str) {
         return (str || "")
-          .toLowerCase()
           .split(" ")
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .map((word) => {
+            if (!word) return word;
+            return word.charAt(0).toUpperCase() + word.slice(1);
+          })
           .join(" ");
-      }
-
-      // Helper functions you can use in console
-      function findToolsWithFeature(feature) {
-        // Find all tools that have a specific feature set to "Yes"
-        return allData.filter((row) => row[feature] === "Yes");
-      }
-
-      function getToolsByType(type) {
-        return allData.filter((row) => row.Tool_type === type);
-      }
-
-      function compareAnalysisFeatures() {
-        // Compare which tools support which analyses
-        const comparison = allData.map((tool) => {
-          const features = {};
-          [
-            "T.test",
-            "ANOVA",
-            "Single level regression",
-            "MLM",
-            "SEM",
-            "Bayesian",
-          ].forEach((feature) => {
-            features[feature] = tool[feature] === "Yes";
-          });
-          return {
-            Tool_name: tool.Tool_name,
-            ...features,
-          };
-        });
-        return comparison;
       }
     </script>
   </body>
